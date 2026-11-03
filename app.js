@@ -16,6 +16,10 @@ app.get("/meunome", (req, res) => {
   res.send("Meu nome é Henrique Dorazzi dos Reis");
 });
 
+app.get("/tico", (req, res) => {
+  res.send("teco");
+});
+
 
 
 

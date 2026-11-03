@@ -3,13 +3,13 @@ const app = express();
 const port = process.env.PORT || 3001;
 
 app.use(express.json())
-app.use(express.urlencoded({extended: true}));
+app.use(express.urlencoded({ extended: true }));
 
 app.get("/", (req, res) => res.type('html').send(html));
 
 app.get('/req', (req, res) => {
-    console.log("Just got a request!")
-    res.send('Yo!')
+  console.log("Just got a request!")
+  res.send('Yo!')
 })
 
 app.get("/meunome", (req, res) => {
@@ -33,6 +33,17 @@ app.post("/series", (req, res) => {
 
 app.get("/bug", (req, res) => {
   throw new Error("Bug simulado em produção!");
+});
+
+app.get("/pokemon/:nome", async (req, res) => {
+  try {
+    const resposta = await fetch(`https://pokeapi.co/api/v2/pokemon/${req.params.nome}`);
+    if (!resposta.ok) return res.status(404).json({ erro: "Pokémon não encontrado" });
+    const dados = await resposta.json();
+    res.json({ nome: dados.name, altura: dados.height, peso: dados.weight });
+  } catch (err) {
+    res.status(500).json({ erro: "Falha ao consultar a API externa" });
+  }
 });
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`));
